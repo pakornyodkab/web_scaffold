@@ -49,11 +49,32 @@ class UsersController < ApplicationController
 
   # DELETE /users/1 or /users/1.json
   def destroy
-    @user.destroy
     respond_to do |format|
-      format.html { redirect_to users_url, notice: "User was successfully destroyed." }
+      format.html { redirect_to user_delview_path(@user), notice: "User was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def delview
+    uid = params[:id]
+    u = User.find(uid)
+    @name = u.name
+    @email = u.email
+    @birthdate = u.birthdate
+    u.destroy
+  end
+
+  def create_fast
+    names = params[:name]
+    email = params[:email]
+    User.create(name:names,email:email,birthdate:0)
+
+    respond_to do |format|
+      format.html { redirect_to users_path(@user), notice: "User was successfully created again." }
+      format.json { head :no_content }
+    end
+
+
   end
 
   private
@@ -67,3 +88,6 @@ class UsersController < ApplicationController
       params.require(:user).permit(:name, :email, :birthdate)
     end
 end
+
+
+#@user.destroy

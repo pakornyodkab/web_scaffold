@@ -1,0 +1,16 @@
+
+%h1 Delete view
+
+%p Deleted user's name is #{@name}
+%p Deleted user's email is #{@email}
+%p Deleted user's birthdate is #{@birthdate}
+
+%p= link_to 'Back to index' , users_path
+
+%p= link_to 'Create deleted user again' , user_create_fast_path(@name,@email)
+
+
+
+
+
+
