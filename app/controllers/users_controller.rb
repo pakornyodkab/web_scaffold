@@ -61,13 +61,15 @@ class UsersController < ApplicationController
     @name = u.name
     @email = u.email
     @birthdate = u.birthdate
+    @address = u.address
+    @postal_code = u.postal_code
     u.destroy
   end
 
   def create_fast
     names = params[:name]
     email = params[:email]
-    User.create(name:names,email:email,birthdate:0)
+    User.create(name:names,email:email,birthdate:0,address:0,postal_code:0)
 
     respond_to do |format|
       format.html { redirect_to users_path(@user), notice: "User was successfully created again." }
@@ -85,7 +87,7 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :email, :birthdate)
+      params.require(:user).permit(:name, :email, :birthdate , :address,:postal_code)
     end
 end
 
