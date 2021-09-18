@@ -79,6 +79,30 @@ class UsersController < ApplicationController
 
   end
 
+  def main
+  end
+
+  def findbyemail
+    emails = params[:email]
+    password = params[:password]
+    if (password.eql?"pass")
+      @user = User.find_by(email:emails)
+      respond_to do |format|
+        if (!@user.nil?)
+          format.html { redirect_to @user }
+          format.json { head :no_content }
+        else
+          format.html { redirect_to main_path, notice: "Wrong username or password " }
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to main_path, notice: "Wrong username or password " }
+        format.json { head :no_content }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -87,9 +111,8 @@ class UsersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.require(:user).permit(:name, :email, :birthdate , :address,:postal_code)
+      params.require(:user).permit(:name, :email, :birthdate , :address,:postal_code ,:password)
     end
 end
 
 
-#@user.destroy
