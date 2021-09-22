@@ -1,0 +1,62 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Birthdate:</strong>
+  <%= @user.birthdate %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @user.address %>
+</p>
+
+<p>
+  <strong>Postal code:</strong>
+  <%= @user.postal_code %>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>
+<br>
+<%= link_to 'New_Post', newpostbyuser_path(@user.id) %>
+
+
+<p>Posts</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Msg</th>
+      <th>Date , Time</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @user.posts.each do |post| %>
+      <tr>
+        <td><%= post.msg %></td>
+        <td><%=post.created_at%></td>
+        <td><%=link_to 'Edit' ,edit_post_path(post) %></td>
+        <td><%=link_to 'Delete', post_path(post) ,method: :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+

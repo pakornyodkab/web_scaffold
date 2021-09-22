@@ -89,7 +89,7 @@ class UsersController < ApplicationController
       @user = User.find_by(email:emails)
       respond_to do |format|
         if (!@user.nil?)
-          format.html { redirect_to @user }
+          format.html { redirect_to showforuserlogin_path(@user.id) }
           format.json { head :no_content }
         else
           format.html { redirect_to main_path, notice: "Wrong username or password " }
@@ -101,6 +101,11 @@ class UsersController < ApplicationController
         format.json { head :no_content }
       end
     end
+  end
+
+  def showforuserlogin
+    uid = params[:id]
+    @user = User.find(uid)
   end
 
   private
