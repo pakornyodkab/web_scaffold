@@ -27,3 +27,36 @@
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
+<br>
+<%= link_to 'New_Post', newpostbyuser_path(@user.id) %>
+
+
+<p>Posts</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Msg</th>
+      <th>Date , Time</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @user.posts.each do |post| %>
+      <tr>
+        <td><%= post.msg %></td>
+        <td><%=post.created_at%></td>
+        <td><%=link_to 'Edit' ,edit_post_path(post) %></td>
+        <td><%=link_to 'Delete', post_path(post) ,method: :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
