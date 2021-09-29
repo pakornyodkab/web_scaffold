@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :logged_in ,except: %i[main findbyemail]
 
   # GET /users or /users.json
   def index
@@ -80,32 +81,44 @@ class UsersController < ApplicationController
   end
 
   def main
+    session[:user_id] = nil
   end
 
   def findbyemail
     emails = params[:email]
     password = params[:password]
-    if (password.eql?"pass")
-      @user = User.find_by(email:emails)
-      respond_to do |format|
-        if (!@user.nil?)
+    @user = User.find_by(email:emails)
+    if (!@user.nil?)
+      if (@user.authenticate(password))
+        session[:user_id] = @user.id
+        respond_to do |format|
           format.html { redirect_to showforuserlogin_path(@user.id) }
           format.json { head :no_content }
-        else
-          format.html { redirect_to main_path, notice: "Wrong username or password " }
+        end
+      else
+        session[:user_id] = nil
+        respond_to do |format|
+          format.html { redirect_to main_path, notice: "Wrong password" }
+          format.json { head :no_content }
         end
       end
     else
+      session[:user_id] = nil
       respond_to do |format|
-        format.html { redirect_to main_path, notice: "Wrong username or password " }
+        format.html { redirect_to main_path, notice: "Wrong email " }
         format.json { head :no_content }
       end
     end
   end
 
   def showforuserlogin
-    uid = params[:id]
-    @user = User.find(uid)
+    if (logged_in)
+      uid = params[:id]
+      @user = User.find(uid)
+    else
+      return 
+    end
+    
   end
 
   private
@@ -118,6 +131,18 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :birthdate , :address,:postal_code ,:password)
     end
+
+    def logged_in
+      if (session[:user_id])
+        return true
+      else
+        respond_to do |format|
+          format.html { redirect_to main_path, notice: "Please Login " }
+          format.json { head :no_content }
+        end
+      end
+    end
+
 end
 
 
