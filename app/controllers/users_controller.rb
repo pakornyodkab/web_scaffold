@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
-  before_action :logged_in ,except: %i[main findbyemail]
+  before_action :logged_in ,except: %i[main findbyemail ]
 
   # GET /users or /users.json
   def index
@@ -26,6 +26,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
+        session[:user_id] = @user.id
         format.html { redirect_to @user, notice: "User was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
@@ -114,6 +115,12 @@ class UsersController < ApplicationController
   def showforuserlogin
     if (logged_in)
       uid = params[:id]
+      if (session[:user_id] != uid.to_i)
+        respond_to do |format|
+          format.html { redirect_to showforuserlogin_path(session[:user_id]) ,alert:"You can't see show page of other users" }
+          format.json { head :no_content }
+        end
+      end
       @user = User.find(uid)
     else
       return 

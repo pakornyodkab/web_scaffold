@@ -3,4 +3,5 @@
 <%= render 'form', user: @user %>
 
 <%= link_to 'Show', @user %> |
-<%= link_to 'Back', showforuserlogin_path(@user.id)%>
+<%= link_to 'Back to showforuserlogin', showforuserlogin_path(@user.id)%>
+<%= link_to 'Back to users index', users_path%>
