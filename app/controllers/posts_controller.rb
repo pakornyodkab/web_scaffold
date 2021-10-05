@@ -18,11 +18,32 @@ class PostsController < ApplicationController
 
   # GET /posts/1/edit
   def edit
+    uid = @post.user_id
+    if (session[:user_id] != uid.to_i)
+        respond_to do |format|
+          format.html { redirect_to posts_path ,alert:"You can't edit other user's post" }
+          format.json { head :no_content }
+        end
+
+        return
+
+    end
+
   end
 
   # POST /posts or /posts.json
   def create
+    
     @post = Post.new(post_params)
+
+    if (session[:user_id] != post_params[:user_id].to_i)
+      respond_to do |format|
+          format.html { redirect_to posts_path ,alert:"You can't new post by using other user_id" }
+          format.json { head :no_content }
+      end
+      
+      return 
+    end
 
     respond_to do |format|
       if @post.save
@@ -37,6 +58,15 @@ class PostsController < ApplicationController
 
   # PATCH/PUT /posts/1 or /posts/1.json
   def update
+    if (session[:user_id] != post_params[:user_id].to_i)
+      respond_to do |format|
+          format.html { redirect_to posts_path ,alert:"You can't edit other user's post" }
+          format.json { head :no_content }
+      end
+      
+      return 
+    end
+
     respond_to do |format|
       if @post.update(post_params)
         format.html { redirect_to @post, notice: "Post was successfully updated." }
@@ -50,6 +80,15 @@ class PostsController < ApplicationController
 
   # DELETE /posts/1 or /posts/1.json
   def destroy
+    if (session[:user_id] != @post.user_id)
+      respond_to do |format|
+          format.html { redirect_to posts_path ,alert:"You can't destroy other user's post" }
+          format.json { head :no_content }
+      end
+      
+      return 
+    end
+
     @post.destroy
     respond_to do |format|
       format.html { redirect_to showforuserlogin_path(@post.user.id), notice: "Post was successfully destroyed." }
