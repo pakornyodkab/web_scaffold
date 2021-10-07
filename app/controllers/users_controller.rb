@@ -18,6 +18,16 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+
+    if (session[:user_id] != @user.id.to_i)
+        respond_to do |format|
+          format.html { redirect_to users_path ,notice:"You can't edit other user's user" }
+          format.json { head :no_content }
+        end
+
+        return
+
+    end
   end
 
   # POST /users or /users.json
@@ -38,6 +48,17 @@ class UsersController < ApplicationController
 
   # PATCH/PUT /users/1 or /users/1.json
   def update
+
+    if (session[:user_id] != @user.id.to_i)
+        respond_to do |format|
+          format.html { redirect_to users_path ,notice:"You can't edit other user's user" }
+          format.json { head :no_content }
+        end
+
+        return
+
+    end
+
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: "User was successfully updated." }
@@ -51,6 +72,18 @@ class UsersController < ApplicationController
 
   # DELETE /users/1 or /users/1.json
   def destroy
+
+    if (session[:user_id] != @user.id.to_i)
+        respond_to do |format|
+          format.html { redirect_to users_path ,notice:"You can't destroy other user's user" }
+          format.json { head :no_content }
+        end
+
+        return
+
+    end
+
+
     respond_to do |format|
       format.html { redirect_to user_delview_path(@user), notice: "User was successfully destroyed." }
       format.json { head :no_content }
